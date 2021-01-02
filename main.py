@@ -1,15 +1,25 @@
 from flask import Flask
 from flask import request
 from nic_parser.parser import Parser
-
+from string import Template
+from flask import render_template
 
 app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 @app.route("/")
 def hello_world():
     index_file=open("templates/index.html","r")
     index_string=index_file.readline()
-    return f"{''.join(index_string)}"
+    temp_string=Template(''.join(index_string))
+    index_string = temp_string.substiute(name="JayaniNa")
+
+    return f"{index_string}"
+
+
 
     # print(f"{request.args}")
     # name = f"{request.args['name']}"
