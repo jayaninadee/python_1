@@ -6,16 +6,44 @@ from flask import render_template
 
 app = Flask(__name__)
 
-@app.route("/insert_user",methods=["get","post"])
+name_list = ["A", "B"]
+
+
+@app.route("/insert_user", methods=["get", "post"])
 def insert_user_data():
-    name=" "
     print("insert_user_data_method")
+    name = ""
+    print(request.method)
     if request.method == "POST":
         print("inside the post filter")
-    # if "user_name" in request.args:
-    #     print(request.args["user_name"])
+        name = request.form.get("user_name")
+        name_list.append(name)
 
-    return render_template("user_data.html",name=name)
+    return render_template("user_data.html", name_list=name_list)
+
+
+
+
+@app.route("/_index_file_from_file_read")
+def using_file_read():
+    index_file = open("templates/index.html", "r")
+    index_string = index_file.readlines()
+    temp_string = Template(''.join(index_string))
+    index_string = temp_string.substitute(name="ABCCC")
+    return f"{index_string}"
+
+#
+# @app.route("/insert_user",methods=["get","post"])
+# def insert_user_data():
+#     name=" "
+#     print("insert_user_data_method")
+#     print(request.method)
+#     if request.method == "POST":
+#         print("inside the post filter")
+#     # if "user_name" in request.args:
+#     #     print(request.args["user_name"])
+#         name = request.form.get("user_name")
+#     return render_template("user_data.html", name=name)
 
 @app.route("/")
 def index():
@@ -23,7 +51,7 @@ def index():
 
 @app.route("/")
 def hello_world():
-    index_file=open("templates/index.html","r")
+    index_file=open("templates/index.html", "r")
     index_string=index_file.readline()
     temp_string=Template(''.join(index_string))
     index_string = temp_string.substiute(name="JayaniNa")
