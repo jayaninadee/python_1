@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask import request
 from nic_parser.parser import Parser
 from string import Template
@@ -6,7 +6,18 @@ from flask import render_template
 
 app = Flask(__name__)
 
-name_list = ["A", "B"]
+
+class User:
+
+    def __init__(self, name, nic):
+        self.nic = nic
+        self.name = name
+        self.dob = Parser(f"{nic}").birth_date
+        self.gender = Parser(f"{nic}").gender.name
+
+
+
+user_list = []
 
 
 @app.route("/insert_user", methods=["get", "post"])
@@ -17,11 +28,15 @@ def insert_user_data():
     if request.method == "POST":
         print("inside the post filter")
         name = request.form.get("user_name")
-        name_list.append(name)
+        nic = request.form.get("nic")
+        user_list.append(User(name=name, nic=nic))
 
-    return render_template("user_data.html", name_list=name_list)
+    return render_template("user_data.html", user_list=user_list)
 
 
+@app.route("/")
+def index():
+    return render_template("index.html", name="AAA")
 
 
 @app.route("/_index_file_from_file_read")
@@ -45,18 +60,18 @@ def using_file_read():
 #         name = request.form.get("user_name")
 #     return render_template("user_data.html", name=name)
 
-@app.route("/")
-def index():
-    return render_template("index.html", name="Jadu")
-
-@app.route("/")
-def hello_world():
-    index_file=open("templates/index.html", "r")
-    index_string=index_file.readline()
-    temp_string=Template(''.join(index_string))
-    index_string = temp_string.substiute(name="JayaniNa")
-
-    return f"{index_string}"
+# @app.route("/")
+# def index():
+#     return render_template("index.html", name="Jadu")
+#
+# @app.route("/")
+# def hello_world():
+#     index_file=open("templates/index.html", "r")
+#     index_string=index_file.readline()
+#     temp_string=Template(''.join(index_string))
+#     index_string = temp_string.substiute(name="JayaniNa")
+#
+#     return f"{index_string}"
 
 
 
