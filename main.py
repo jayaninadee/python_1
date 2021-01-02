@@ -6,9 +6,20 @@ from flask import render_template
 
 app = Flask(__name__)
 
+@app.route("/insert_user",methods=["get","post"])
+def insert_user_data():
+    name=" "
+    print("insert_user_data_method")
+    if request.method == "POST":
+        print("inside the post filter")
+    # if "user_name" in request.args:
+    #     print(request.args["user_name"])
+
+    return render_template("user_data.html",name=name)
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", name="Jadu")
 
 @app.route("/")
 def hello_world():
